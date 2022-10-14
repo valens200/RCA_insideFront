@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.main{
+  background-image: url(./assets/images/rca1.png) ;
+  background-repeat: no-repeat;
+  background-position:40% 40%;
+  background-size: cover;
+
+}
+.hello{
+  z-index: 100;
+}
+::-webkit-scrollbar{
+  background-color: white;
+}
