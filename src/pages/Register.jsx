@@ -7,6 +7,8 @@ import { TextField } from "@material-ui/core";
 import { setUsername } from "../features/formSlice";
 import { setErrorMessage } from "../features/formSlice";
 import { useNavigate } from "react-router-dom";
+import { setInputFiles } from "../features/PageSlice";
+import { BsImage } from "react-icons/bs";
 import axios from "axios";
 function Register() {
   const dispatch = useDispatch();
@@ -69,6 +71,17 @@ function Register() {
                   />
                 </div>
               ))}
+              <div className="image-upload">
+                <label className="flex space-x-4" for="file-input">
+                  <BsImage className="hover:cursor-pointer text-[2rem] hover:border" />
+                  <p className="text-[0.90rem] itemx-center">add image</p>
+                </label>
+                <input
+                  onChange={(e) => dispatch(setInputFiles(e.target.files))}
+                  id="file-input"
+                  type="file"
+                />
+              </div>
               <div className="w-[100%] text-center bg-black text-white  h-[5vh] border">
                 <input
                   type="submit"
