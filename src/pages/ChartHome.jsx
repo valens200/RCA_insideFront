@@ -12,37 +12,56 @@ import { buttons2 } from '../assets/data'
 import { setSelectedUser } from '../features/UserSlice'
 import { Link } from 'react-router-dom'
 import {FaRegHeart, FaRegComment } from 'react-icons/fa'
-import {BsCursor} from 'react-icons/bs'
+import {BsCursor, BsReplyAll} from 'react-icons/bs'
 import { useEffect, useState } from 'react'
 import { baseUrl } from '../assets/data'
 import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
 function ChartHome() {
 
     const posts = useSelector((store) => store.post.posts)
     const users = useSelector((store) => store.user.users);
     const numbers = [3,4,5,7,8,9,9];
     const dispatch = useDispatch();
-
+    const navigate = useNavigate();
+    const isDarkMode = useSelector((store) => store.post.isDarkMode)
+    const token = localStorage.getItem("accessToken");
     useEffect(() => {
         const getUsers = async() =>{
-            try {
-                await axios.get(baseUrl+"/users", {
-                    headers:{
-                        "Access-Control-Allow-Origin":"http://localhost:3000"
-                    }
-                }).then((result) => {
+            try{
+                if(!token || token == "" || token == null){
+                    navigate("/login");
+                }
+                await axios.post(baseUrl+`/token/validate/${token}}`).then( async(result) => {
                     console.log(result)
+                    if(result.status != 200){
+                        navigate("/login")
+                    }
+                        await axios.get(baseUrl+"/users", {
+                            headers:{
+                                "Authorization":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1d2F2YWxlbnMyMDAzQGdtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6Ii9sb2dpbiIsImV4cCI6MTY2NTc2MzE0MSwiaWF0IjoxNjY1NzYzMDIxfQ.KtmFnfCIv0pGQBkzDsOcDQRdmMadYPC3-Spg4lOK9Ag",
+                                "Access-Control-Allow-Origin":"http://localhost:3000"
+                            }
+                        }).then((result) => {
+                            console.log(result)
+                        }).catch((error) => {
+                            console.log(error)
+                        })
+
                 }).catch((error) => {
-                    console.log(error)
+                   console.log(error);
                 })
-                
-            } catch (error) {
-                console.log(error)
-                
+
+            }catch(err){
+                console.log(err)
             }
         }
         getUsers();
     })
+
+    const setPost = (post) => {
+        console.log(post)
+    }
 
 
   return (
@@ -60,14 +79,14 @@ function ChartHome() {
                         <p>lore</p>
                     </div>
                 {posts.map((post, index) => (
-                <div key={index} className='md:w-[60%]  border p-4 h-[80%] mx-auto'>
-                <div  className='w-[100%]  flex'>
+                <div onClick={() => setPost(post)} key={index} className='md:w-[60%] post z-100  w-[] border p-4 h-[80%] mx-auto'>
+                <div  className='w-[100%]  z-100 flex'>
                         <img className="w-[9%]  h-[10%] rounded-full" src={post.postOwnerImg}/>
                         <p>{post.postOwner}</p>
                     </div>
                     <p>{post.postDescription}</p>
                     <div className='w-[100%] mt-4 w-[100%] '>
-                        <img className='w-[100%] h-[100%]' src={students} alt="rca students" />
+                        <img className='w-[100%] h-[100%]' src={post.postImage} alt="rca students" />
                     </div> 
 
                     <div className='flex flex-col space-y-5'>
@@ -75,6 +94,7 @@ function ChartHome() {
                             <FaRegHeart/>
                             <FaRegComment />
                             <BsCursor />
+                            <BsReplyAll />
                         </div>
                         <div className='flex'>
                             <textarea  className='border w-[80%] focus:outline-0' id="" cols="28" rows="2" />
@@ -111,11 +131,6 @@ function ChartHome() {
                 </Link> */}
 
                     </div>
-
-
-
-
-
             </div>
                     
                 </div>

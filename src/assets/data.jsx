@@ -3,6 +3,7 @@ export const baseUrl = "http://localhost:8080";
 const username = localStorage.getItem("username");
 export const buttons = ['Login', 'Register'];
 export const buttons2 = [username, 'Logout'];
+export const cloudinaryUrl = "https://api.cloudinary.com/v1_1/rwanda-sdfcoding-fdsacademy/image/upload";
 
 export const footerLinks = {
     contacts: ['Email',  'Github', 'LinkedIn', 'Twitter'],
@@ -14,6 +15,9 @@ export const footerLinks = {
 
 }
 
+export const actions = ['Settings', 'Dark mode', 'Followers', 'Followings', 'Posts'];
+
+export const otherActions = ['SwitchAccount', 'Add and Accout'];
 
 export let loggedInUser = {};
 
