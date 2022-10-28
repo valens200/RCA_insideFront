@@ -16,10 +16,9 @@ function App() {
         <Route path="/Register" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route path="/Login" element={<Login />} />
-        <Route path="/chartHome/Register" element={<Register />} />
         <Route path="/home" element={<ChartHome />} />
-        <Route path="/user" element={<User />} />
-        <Route path="/messages" element={<Messaging />} />
+        {/* <Route path="/user" element={<User />} /> */}
+        <Route path="/chart" element={<Messaging />} />
       </Routes>
     </BrowserRouter>
   );

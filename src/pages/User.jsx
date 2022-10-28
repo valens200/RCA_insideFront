@@ -7,9 +7,7 @@ import Posts from "../components/Posts";
 import { click } from "@testing-library/user-event/dist/click";
 function User() {
   const dispatch = useDispatch();
-  const selectedUser = useSelector((store) => store.user.selectedUser);
   const navigationLinks = useSelector((store) => store.post.navigation);
-
   const getClass = (clicked) => {
     console.log(clicked);
     if (clicked) {
@@ -21,9 +19,9 @@ function User() {
 
   return (
     <div>
-      <HomeNav />
+      {/* <HomeNav /> */}
       <div className=" h-[90vh]">
-        <div className="w-[50%] border border-b-0 mx-auto  translate-y-20 h-[90%]">
+        <div className="md:w-[50%] w-[95%] mx-auto border border-b-0 mx-auto  translate-y-20 h-[90%]">
           <div className="w-[100%] bg-black h-[50%] z-100">
             <img
               className="w-[100%] h-[100%]"
@@ -43,15 +41,13 @@ function User() {
             </div>
             <div className=" h-[10%] -translate-y-[90%]">
               <h1 className="font-bold text-[1.5rem] text-center">
-                James Likoni
               </h1>
               <p className="text-[grey]  text-center text-[0.80rem]">
-                Software developer, Embedded systems , Cybersecurity and
-                Competitive programming.
+                {}
               </p>
             </div>
             <div className="w-[90%] mx-auto  -translate-y-[90%] flex justify-center  ">
-              {navigationLinks.map((nav, index) => (
+              {/* {navigationLinks.map((nav, index) => (
                 <div
                   onClick={dispatch(setClicked(nav.id))}
                   key={index}
@@ -59,7 +55,7 @@ function User() {
                 >
                   <p>{nav.name}</p>
                 </div>
-              ))}
+              ))} */}
             </div>
             <div className=" h-[90%]  overflow-scroll">
               <Posts />

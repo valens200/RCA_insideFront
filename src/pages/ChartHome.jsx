@@ -1,142 +1,174 @@
-import React from 'react'
-import Navbar from '../components/Navbar'
-import HomeNav from '../components/HomeNav'
-import image1 from '../assets/images/image1.jpg'
-import students from '../assets/images/students.jpeg'
-import { useSelector, useDispatch } from 'react-redux'
-import Notifications from '../components/Notifications'
-import Chart from './Chart'
-import "react-responsive-carousel/lib/styles/carousel.min.css"; 
-import { Carousel } from 'react-responsive-carousel';  
-import { buttons2 } from '../assets/data'
-import { setSelectedUser } from '../features/UserSlice'
-import { Link } from 'react-router-dom'
-import {FaRegHeart, FaRegComment } from 'react-icons/fa'
-import {BsCursor, BsReplyAll} from 'react-icons/bs'
-import { useEffect, useState } from 'react'
-import { baseUrl } from '../assets/data'
-import axios from 'axios'
-import { useNavigate } from 'react-router-dom'
+import React from "react";
+import Navbar from "../components/Navbar";
+import HomeNav from "../components/HomeNav";
+import image1 from "../assets/images/image1.jpg";
+import students from "../assets/images/students.jpeg";
+import { useSelector, useDispatch } from "react-redux";
+import Notifications from "../components/Notifications";
+import Chart from "./Chart";
+import "react-responsive-carousel/lib/styles/carousel.min.css";
+import { Carousel } from "react-responsive-carousel";
+import { buttons2 } from "../assets/data";
+import { setSelectedUser } from "../features/UserSlice";
+import { Link } from "react-router-dom";
+import { FaRegHeart, FaRegComment } from "react-icons/fa";
+import { BsCursor, BsReplyAll } from "react-icons/bs";
+import { useEffect, useState } from "react";
+import { baseUrl } from "../assets/data";
+import { setPosts } from "../features/PageSlice";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { BsDot } from "react-icons/bs";
+import { setLoggedInUser } from "../features/PageSlice";
+import { withWidth } from "@material-ui/core";
+import LogoutOptions from "../components/LogoutOptions";
+import SinglePost from "../components/SinglePost";
+import EmojiPicker from "emoji-picker-react";
+import { managePopus } from "../features/PageSlice";
+import { setClicked } from "../features/PageSlice";
+import { setClickedPost } from "../features/PageSlice";
 function ChartHome() {
+  const posts = useSelector((store) => store.post.posts);
+  const users = useSelector((store) => store.user.users);
+  const numbers = [3, 4, 5, 7, 8, 9, 9];
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const isDarkMode = useSelector((store) => store.post.isDarkMode);
+  const token = localStorage.getItem("accessToken");
+  const loggedInUser = useSelector((store) => store.post.loggedInUser);
+  const email = localStorage.getItem("email");
+  const [showEmogis, setShowEmogis ] = useState(false)
 
-    const posts = useSelector((store) => store.post.posts)
-    const users = useSelector((store) => store.user.users);
-    const numbers = [3,4,5,7,8,9,9];
-    const dispatch = useDispatch();
-    const navigate = useNavigate();
-    const isDarkMode = useSelector((store) => store.post.isDarkMode)
-    const token = localStorage.getItem("accessToken");
-    useEffect(() => {
-        const getUsers = async() =>{
-            try{
-                if(!token || token == "" || token == null){
-                    navigate("/login");
-                }
-                await axios.post(baseUrl+`/token/validate/${token}}`).then( async(result) => {
-                    console.log(result)
-                    if(result.status != 200){
-                        navigate("/login")
-                    }
-                        await axios.get(baseUrl+"/users", {
-                            headers:{
-                                "Authorization":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1d2F2YWxlbnMyMDAzQGdtYWlsLmNvbSIsInJvbGVzIjpbIkFETUlOIl0sImlzcyI6Ii9sb2dpbiIsImV4cCI6MTY2NTc2MzE0MSwiaWF0IjoxNjY1NzYzMDIxfQ.KtmFnfCIv0pGQBkzDsOcDQRdmMadYPC3-Spg4lOK9Ag",
-                                "Access-Control-Allow-Origin":"http://localhost:3000"
-                            }
-                        }).then((result) => {
-                            console.log(result)
-                        }).catch((error) => {
-                            console.log(error)
-                        })
-
-                }).catch((error) => {
-                   console.log(error);
-                })
-
-            }catch(err){
-                console.log(err)
-            }
+  useEffect(() => {
+    const getUsers = async () => {
+      try {
+        if (!token || token == "" || token == null) {
+          navigate("/login");
         }
-        getUsers();
-    })
+        await axios
+          .get(baseUrl + "/posts", {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: "Bearer " + localStorage.getItem("accessToken"),
+              "Access-Control-Allow-Origin": "http://localhost:3000",
+            },
+          })
+          .then(async (result) => {
+            dispatch(setPosts(result.data));
+            await axios
+              .get("/user", {
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization:
+                    "Bearer " + localStorage.getItem("accessToken"),
+                  "Access-Control-Allow-Origin": "http://localhost:3000",
+                },
+                email: email,
+              })
+              .then((response) => {
+                setLoggedInUser(response.data);
+              })
+              .catch((err) => {
+                // console.log(err);
+              });
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    getUsers();
+  }, [posts]);
 
-    const setPost = (post) => {
-        console.log(post)
-    }
-
+  const dispatchMentodes = (post) => {
+    dispatch(managePopus({type:"selectedpost"}))
+    dispatch(setClickedPost(post))
+    console.log(post)
+  }
 
   return (
-    <div className='w-[100%]'>
-        <div className='h-[10vh] fixed top-0 w-[100vw] z-20 bg-white'>
+    <div className="w-[100%]">
+      <div className="h-[10vh] fixed top-0 w-[100vw] z-20 bg-white">
         <HomeNav />
-        </div>
-        <div className="flex md:w-[80%] w-[90%] mx-auto" >
-            <div className='bg-black text-white   top-0 fixed mx-auto w-[20%]'>
-                <p>helo</p>
-            </div>
-            <div className='h-[100vh]   md:w-[70%]  mx-auto flex flex-row  justify-center   items-center '>
-            <div className='md:w-[80%]  overfolow-y-scroll space-y-8  h-[100%] flex  space-x-2 flex-col mx-auto'>
-                    <div className='h-[50vh] my-4 w-[90%] mx-auto border text-black bg-black'>
-                        <p>lore</p>
-                    </div>
-                {posts.map((post, index) => (
-                <div onClick={() => setPost(post)} key={index} className='md:w-[60%] post z-100  w-[] border p-4 h-[80%] mx-auto'>
-                <div  className='w-[100%]  z-100 flex'>
-                        <img className="w-[9%]  h-[10%] rounded-full" src={post.postOwnerImg}/>
-                        <p>{post.postOwner}</p>
-                    </div>
-                    <p>{post.postDescription}</p>
-                    <div className='w-[100%] mt-4 w-[100%] '>
-                        <img className='w-[100%] h-[100%]' src={post.postImage} alt="rca students" />
-                    </div> 
+      </div>
+      <div className=" md:w-[80%] h-[90vh] w-[90%] mx-auto">
+        <div className="h-[100vh]   md:w-[100%]  mx-auto flex flex-row  justify-around   items-center ">
+          <div className="h-screen w-[20%] sticky bottom-0  border ">
+            <SinglePost />
+          </div>
+          <div className="md:w-[60%]  overfolow-y-scroll space-y-8  h-[100%] flex  space-x-2 flex-col mx-auto">
+            <div className="w-[90%] mx-auto">
+              <div className="h-[2%]  my-4 w-[90%] mx-auto border text-black bg-black">
+                <p>lore</p>
+              </div>
+              {posts.map((post, index) => (
+                <div
+                  // onClick={() => setPost(post)}
+                  onClick={() =>dispatchMentodes(post)}
+                  key={index}
+                  className="md:w-[75%] post z-100  w-[] border p-4 h-[28%] mx-auto"
+                >
+                  <div className="w-[100%]  z-100 flex">
+                    <img
+                      className="w-[9%]  h-[10%] rounded-full"
+                      src={post.postOwnerImg}
+                    />
+                    <p>{post.postOwner}</p>
+                  </div>
+                  <p>{post.postDescription}</p>
+                  <div className="w-[100%] mt-4 w-[100%] ">
+                    <img
+                      className="w-[100%] h-[100%]"
+                      src={post.postImage}
+                      alt="rca students"
+                    />
+                  </div>
 
-                    <div className='flex flex-col space-y-5'>
-                        <div className='flex mt-2 text-[1.4rem] space-x-4'>
-                            <FaRegHeart/>
-                            <FaRegComment />
-                            <BsCursor />
-                            <BsReplyAll />
-                        </div>
-                        <div className='flex'>
-                            <textarea  className='border w-[80%] focus:outline-0' id="" cols="28" rows="2" />
-                            <button className='bg-[#0B0B45] text-white w-[20%]' >post</button >
-                        </div>
-                        <div className='w-[100%] flex space-x-3 flex-row'>
-                            <img className='w-[10%] rounded-full  h-[10%]' src={image1}/>
-                            <p className='items-center translate-y-[8%] text-center '>Liked by murangwa and 239 others</p>
-                        </div>
+                  <div className="flex flex-col space-y-5">
+                    <div className="flex mt-2 text-[1.4rem] space-x-4">
+                      <FaRegHeart />
+                      <FaRegComment />
+                      <BsCursor />
+                      <BsReplyAll />
                     </div>
+                    <div className="w-[100%] flex space-x-3 flex-row">
+                      <img
+                        className="w-[10%] rounded-full  h-[10%]"
+                        src={image1}
+                      />
+                      <p className="items-center translate-y-[8%] text-center ">
+                        Liked by murangwa and 239 others
+                      </p>
+                    </div>
+                    {showEmogis  == true? <EmojiPicker  id={index}   className=" h-[10%] w-[20%]"/> : null}
+                    <div className="flex space-x-2">
+                      <div className="w-[10%] h-[50%]">
+                        <img  onClick={() => setShowEmogis(true)} className="w-[100%]" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcREmbnZWn2Zu9YoWUnDFHMJuY5gBcdKyZD01A&usqp=CAU"/>
+                      </div>
+                      <textarea
+                        className="border w-[80%] focus:outline-0"
+                        id=""
+                        cols="28"
+                        rows="1"
+                      />
+                      <button onClick={() => setShowEmogis(false)} className="bg-[#0B0B45] text-white w-[20%]">
+                        post
+                      </button>
+                    </div>
+                  </div>
                 </div>
-                ))}
+              ))}
             </div>
-                <div className='w-[30%] hidden md:grid   overflow-y-scroll  grid items-center fixed right-0 bg-white bottom-0  h-[100%]'>
-             <div className='flex pt-20 flex-col space-y-9 w-[90%] mx-auto '>
-                {/* <Link to="/user">
-                {numbers.map((numbre, index) => (
-                    <div>
-                        <h1 className='text-center text-[grey] pb-2'>Suggestions for you</h1>
-                        {users.map((post, index) => (
-                    <div className='w-[100%] flex   border p-4 h-[80%] mx-auto'>
-                    <div className='w-[100%] flex'>
-                            <img className="w-[15%]  h-[100%] rounded-full" src={post.userImage}/>
-                            <p>{post.userName}</p>
-                        </div>
-                        <div className='w-[50%] h-[100%] ' >
-                            <button className='bg-[#00008B] h-[3vh]  rounded hover:bg-white hover:text-[#00008B] hover:border text-white  font-bold w-[70%] '>Follow</button>
-                        </div>
-                    </div>
-                    ))}
-                    </div>
-                    
-                ))}
-                </Link> */}
-
-                    </div>
-            </div>
-                    
-                </div>
+          </div>
+          <div className="h-screen w-[30%]">
+            <LogoutOptions />
+          </div>
         </div>
+      </div>
     </div>
-  )
+  );
 }
 
-export default ChartHome
+export default ChartHome;

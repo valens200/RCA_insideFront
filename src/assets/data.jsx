@@ -1,10 +1,12 @@
+import SockJS from "sockjs-client";
+import { over } from "stompjs";
 export const baseUrl = "http://localhost:8080";
-
+const io = require('socket.io-client')
 const username = localStorage.getItem("username");
 export const buttons = ['Login', 'Register'];
 export const buttons2 = [username, 'Logout'];
 export const cloudinaryUrl = "https://api.cloudinary.com/v1_1/rwanda-sdfcoding-fdsacademy/image/upload";
-
+export const baseSocketUrl = "http://localhost:4000";
 export const footerLinks = {
     contacts: ['Email',  'Github', 'LinkedIn', 'Twitter'],
     QuickLinks: ['Home', 'Chart', 'Register', 'Login'],
@@ -14,6 +16,8 @@ export const footerLinks = {
     navigation:['Posts', 'Followers', 'Following']
 
 }
+const socket = new SockJS("http://localhost:8080/ws");
+export const stompClient  = over(socket);
 
 export const actions = ['Settings', 'Dark mode', 'Followers', 'Followings', 'Posts'];
 

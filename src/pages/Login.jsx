@@ -9,6 +9,9 @@ import { setUsername } from "../features/formSlice";
 import axios from "axios";
 import { setErrorMessage } from "../features/formSlice";
 import { useNavigate } from "react-router-dom";
+import SockJS from "sockjs-client";
+import { over } from "stompjs";
+import { stompClient } from "../assets/data";
 
 function Login() {
   const dispatch = useDispatch();
@@ -24,14 +27,13 @@ function Login() {
           password: enteredInputs.password,
         })
         .then((result) => {
-          console.log(result);
-          console.log(result.status);
-          localStorage.setItem("refreshToken", result.data.refresh_Token);
-          localStorage.setItem("accessToken", result.data.acccess_Token);
+          localStorage.setItem("refreshToken", result.data.refresh_token);
+          localStorage.setItem("accessToken", result.data.access_token);
           localStorage.setItem("username", result.data.username);
           localStorage.setItem("email", result.data.email);
           if (result.status == 200) {
             navigate("/home");
+            stompClient.connect({},onConnected,onError)
           }
         })
         .catch((error) => {
@@ -41,6 +43,19 @@ function Login() {
       console.log(error);
     }
   };
+
+  const onConnected = (payload) => {
+    console.log(payload);
+    console.log("connected");
+    stompClient.subscribe("/app/chartroom", (data) => {
+      console.log("data", data);
+    });
+    stompClient.subscribe("/app/user");
+  }
+
+  const onError = (err) => {
+    console.log(err)
+  }
   return (
     <div className=" mx-auto grid items-center w-[100%] h-[100vh] ">
       <div className="border grid w-[97%]  md:w-[25%] mx-auto h-[60vh] text-black">
