@@ -37,7 +37,7 @@ function LogoutOptions() {
   return (
     <div className={getClass()}>
       <p className="text-center  bg-[#0B0B45] text-white  p-2 w-[100%]">
-        RCA Inside
+       RCA inside
       </p>
       <div className="flex flex-col space-y-4">
         {loading ? (

@@ -37,7 +37,7 @@ function ChartHome() {
   const token = localStorage.getItem("accessToken");
   const loggedInUser = useSelector((store) => store.post.loggedInUser);
   const email = localStorage.getItem("email");
-  const [showEmogis, setShowEmogis ] = useState(false)
+  const [showEmogis, setShowEmogis] = useState(false);
 
   useEffect(() => {
     const getUsers = async () => {
@@ -83,11 +83,10 @@ function ChartHome() {
   }, [posts]);
 
   const dispatchMentodes = (post) => {
-    dispatch(managePopus({type:"selectedpost"}))
-    dispatch(setClickedPost(post))
-    console.log(post)
-  }
-
+    dispatch(managePopus({ type: "selectedpost" }));
+    dispatch(setClickedPost(post));
+    console.log(post);
+  };
   return (
     <div className="w-[100%]">
       <div className="h-[10vh] fixed top-0 w-[100vw] z-20 bg-white">
@@ -106,9 +105,9 @@ function ChartHome() {
               {posts.map((post, index) => (
                 <div
                   // onClick={() => setPost(post)}
-                  onClick={() =>dispatchMentodes(post)}
+                  onClick={() => dispatchMentodes(post)}
                   key={index}
-                  className="md:w-[75%] post z-100  w-[] border p-4 h-[28%] mx-auto"
+                  className="md:w-[75%] post z-100  w-[] border pt-5  mx-auto"
                 >
                   <div className="w-[100%]  z-100 flex">
                     <img
@@ -125,11 +124,13 @@ function ChartHome() {
                       alt="rca students"
                     />
                   </div>
-
-                  <div className="flex flex-col space-y-5">
-                    <div className="flex mt-2 text-[1.4rem] space-x-4">
+                  <div className="flex flex-col p-4 space-y-5">
+                    <div className="flex  w-[80%] mx-auto flex justify-between mt-2 text-[1.4rem] space-x-4">
                       <FaRegHeart />
-                      <FaRegComment />
+                      <div className="flex">
+                          <span>{post.comments != []  ? 0 :  posts.comments.length + ""}</span>
+                        <FaRegComment />
+                      </div>
                       <BsCursor />
                       <BsReplyAll />
                     </div>
@@ -141,21 +142,6 @@ function ChartHome() {
                       <p className="items-center translate-y-[8%] text-center ">
                         Liked by murangwa and 239 others
                       </p>
-                    </div>
-                    {showEmogis  == true? <EmojiPicker  id={index}   className=" h-[10%] w-[20%]"/> : null}
-                    <div className="flex space-x-2">
-                      <div className="w-[10%] h-[50%]">
-                        <img  onClick={() => setShowEmogis(true)} className="w-[100%]" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcREmbnZWn2Zu9YoWUnDFHMJuY5gBcdKyZD01A&usqp=CAU"/>
-                      </div>
-                      <textarea
-                        className="border w-[80%] focus:outline-0"
-                        id=""
-                        cols="28"
-                        rows="1"
-                      />
-                      <button onClick={() => setShowEmogis(false)} className="bg-[#0B0B45] text-white w-[20%]">
-                        post
-                      </button>
                     </div>
                   </div>
                 </div>

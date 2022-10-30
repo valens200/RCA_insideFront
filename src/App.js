@@ -4,9 +4,9 @@ import { BrowserRouter, Routes, Route, Switch } from "react-router-dom";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 import ChartHome from "./pages/ChartHome";
-import User from "./pages/User";
 import Messaging from "./pages/Messaging";
 import Animantion from "./pages/Animantion";
+import Profile from "./pages/Profile";
 
 function App() {
   return (
@@ -17,7 +17,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/Login" element={<Login />} />
         <Route path="/home" element={<ChartHome />} />
-        {/* <Route path="/user" element={<User />} /> */}
+        <Route  path="/profile" element={<Profile />} />
         <Route path="/chart" element={<Messaging />} />
       </Routes>
     </BrowserRouter>

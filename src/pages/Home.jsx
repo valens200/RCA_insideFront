@@ -3,11 +3,12 @@ import "../index.css";
 import Footer from "../components/Footer";
 import React from "react";
 import { Typewriter } from "react-simple-typewriter";
+import HomeFooter from "../components/HomeFooter";
 function Home() {
   return (
     <div className=" ">
       <Navbar />
-      <div className=" main grid items-center h-[92vh] ">
+      <div className=" main grid items-center h-[60vh] ">
         <div className="container font-bold backdrop-brightness hello w-[60%] mx-auto text-white">
           <div className="App">
             <h1
